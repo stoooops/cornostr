@@ -74,6 +74,7 @@ pub struct Event {
 ///   - A tab character (`0x09`), use `\t`
 ///   - A backspace, (`0x08`), use `\b`
 ///   - A form feed, (`0x0C`), use `\f`
+#[allow(dead_code)]
 pub fn calculate_event_id(event: &Event) -> String {
     let serialized = serialize_event(event);
     let mut hasher = Sha256::new();
@@ -82,6 +83,7 @@ pub fn calculate_event_id(event: &Event) -> String {
 }
 
 /// Serializes an event for ID calculation and signing.
+#[allow(dead_code)]
 pub fn serialize_event(event: &Event) -> Vec<u8> {
     let serialized = format!(
         "[0,\"{}\",{},{},{},{}]",
