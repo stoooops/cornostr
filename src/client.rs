@@ -61,7 +61,6 @@ impl Client {
     /// Publishes an event to all connected relays.
     ///
     /// This method signs the event with the client's keypair (if set), then sends it to all connected relays.
-    #[allow(dead_code)]
     pub async fn publish_event(
         &mut self,
         event: &mut Event,

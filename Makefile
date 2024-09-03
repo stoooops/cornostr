@@ -27,3 +27,12 @@ up:
 
 down:
 	@echo "Define your 'down' command here"
+
+relay:
+	cargo run -- relay --address 127.0.0.1:8080
+
+subscribe:
+	cargo run -- client --relay ws://127.0.0.1:8080 subscribe
+
+publish:
+	cargo run -- client --relay ws://127.0.0.1:8080 publish --message "Hello, Nostr!"
