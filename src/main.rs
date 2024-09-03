@@ -1,36 +1,42 @@
-use cornostr::client::Client;
 use std::env;
+
+mod client;
+mod crypto;
+mod event;
+mod relay;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        eprintln!("Usage: {} <relay_address>", args[0]);
+    if args.len() != 3 {
+        eprintln!("Usage: {} <client|relay> <address>", args[0]);
         std::process::exit(1);
     }
 
-    let relay_addr = &args[1];
-    let mut client = Client::new();
+    let mode = &args[1];
+    let address = &args[2];
 
-    // Generate a keypair for the client
-    println!("Generating keypair...");
-    client.generate_keypair();
+    match mode.as_str() {
+        "client" => {
+            let mut client = client::Client::new();
+            client.generate_keypair();
+            client.connect(address).await?;
 
-    // Connect to the relay
-    println!("Connecting to relay...");
-    client.connect(relay_addr).await?;
+            let subscription_id = "my_subscription";
+            let filter = r#"{"kinds": [1], "limit": 10}"#;
+            client.subscribe(subscription_id, filter).await?;
 
-    // Example: Create a subscription
-    let subscription_id = "my_subscription";
-    let filter = r#"{"kinds": [1], "limit": 10}"#;
-    println!("Subscribing to events...");
-    client.subscribe(subscription_id, filter).await?;
-
-    // Start receiving events
-    println!("Receiving events...");
-    client.receive_events().await?;
-
-    // You can add more functionality here, such as publishing events or processing received events
+            client.receive_events().await?;
+        }
+        "relay" => {
+            let relay = relay::Relay::new();
+            relay.run(address).await?;
+        }
+        _ => {
+            eprintln!("Invalid mode. Use 'client' or 'relay'.");
+            std::process::exit(1);
+        }
+    }
 
     Ok(())
 }
