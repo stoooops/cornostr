@@ -54,14 +54,13 @@ pub fn verify_event(event: &Event) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use rand::rngs::OsRng;
 
     use crate::event::calculate_event_id;
 
     use super::*;
 
     fn test_event() -> Event {
-        return Event {
+        Event {
             content: "Thank you!".to_string(),
             created_at: 1725316278,
             id: "4dc5e11a899e3a0496a31955a486a74800ba6d756e40fe0ceb67e3930bcb5dc6".to_string(),
@@ -73,7 +72,7 @@ mod tests {
                 vec!["e".to_string(),"32928056b07792e9a92193720c67d3458351ea66fbc568cdc87be41a5faa92ce".to_string(),"wss://nos.lol".to_string(),"reply".to_string()],
                 vec!["p".to_string(),"2f5759825226f1d57ef1652ba66114b2f938f7f5c50dc505708e5d8b31e4f3c9".to_string()]
                 ]
-            };
+            }
     }
 
     #[test]
